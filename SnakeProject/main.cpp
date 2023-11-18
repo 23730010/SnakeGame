@@ -18,6 +18,8 @@ class CONRAN
 {
 public:
     Point conMoi;
+    Point gocTraiTren;// góc trái trên
+    Point gocPhaiDuoi;// góc phải dưới
     struct Point dotRan[dotToiDa];
     int DoDai;
     int diem = 0;
