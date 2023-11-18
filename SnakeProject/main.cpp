@@ -3,7 +3,13 @@
 #include <cstdlib>
 #include <conio.h>
 using namespace std;
+#define dotToiDa 500
+#define soDotMacDinh 5
 void gotoxy( int column, int line );
+
+int capDo = 1;// 1- de, 2 - trung binh, 3 - kho
+int doKhoMacDinh = 300;
+
 struct Point
 {
     int x,y;
@@ -11,34 +17,37 @@ struct Point
 class CONRAN
 {
 public:
-    struct Point A[100];
+    Point conMoi;
+    struct Point dotRan[dotToiDa];
     int DoDai;
+    int diem = 0;
+    bool lonLen = false;
     CONRAN()
     {
         DoDai = 3;
-        A[0].x = 10;
-        A[0].y = 10;
-        A[1].x = 11;
-        A[1].y = 10;
-        A[2].x = 12;
-        A[2].y = 10;
+        dotRan[0].x = 10;
+        dotRan[0].y = 10;
+        dotRan[1].x = 11;
+        dotRan[1].y = 10;
+        dotRan[2].x = 12;
+        dotRan[2].y = 10;
     }
     void Ve()
     {
         for (int i = 0; i < DoDai; i++)
         {
-            gotoxy(A[i].x,A[i].y);
+            gotoxy(dotRan[i].x,dotRan[i].y);
             cout<<"X";
         }
     }
     void DiChuyen(int Huong)
     {
         for (int i = DoDai-1; i>0; i--)
-            A[i] = A[i-1];
-        if (Huong==0) A[0].x = A[0].x + 1;
-        if (Huong==1) A[0].y = A[0].y + 1;
-        if (Huong==2) A[0].x = A[0].x - 1;
-        if (Huong==3) A[0].y = A[0].y - 1;
+            dotRan[i] = dotRan[i-1];
+        if (Huong==0) dotRan[0].x = dotRan[0].x + 1;
+        if (Huong==1) dotRan[0].y = dotRan[0].y + 1;
+        if (Huong==2) dotRan[0].x = dotRan[0].x - 1;
+        if (Huong==3) dotRan[0].y = dotRan[0].y - 1;
 
     }
 };
