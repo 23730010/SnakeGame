@@ -168,6 +168,8 @@ int main()
     int Huong = 0;
     char t;
 
+    // xuất tiếng việt có dấu ra màn hình
+    SetConsoleOutputCP(65001);
     while (1)
     {
         if (kbhit())
