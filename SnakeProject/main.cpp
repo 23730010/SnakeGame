@@ -60,10 +60,12 @@ public:
     }
     void veConRan()
     {
+        diChuyenCotDong(dotRan[0].cot,dotRan[0].dong);
+        cout << "O"
         for (int i = 0; i < doDai; i++)
         {
             diChuyenCotDong(dotRan[i].cot,dotRan[i].dong);
-            cout<<"X";
+            cout<<"+";
         }
     }
     void diChuyen(int Huong)
@@ -149,7 +151,7 @@ void veConMoi(CONRAN r)
 
     // di chuyển con trỏ tới tọa độ của con mồi để vẽ con mồi
     diChuyenCotDong(conMoi.cot, conMoi.dong);
-    cout << "+";
+    cout << "o";
 }
 
 /**
