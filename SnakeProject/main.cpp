@@ -52,6 +52,42 @@ public:
         if (Huong==3) dotRan[0].y = dotRan[0].y - 1;
 
     }
+    // Khi ran di chuyen xoa anh ran cu tren man hinh (xoa dot cuoi cung)
+    void xoaConRan()
+    {
+        gotoxy(dotRan[DoDai].cot, dotRan[DoDai].dong);
+        cout<< " ";
+    }
+
+    void veConRanChet()
+    {
+        // Ve cai minh luc ran chet
+        for (int i = 1; i < DoDai; i++)
+        {
+            gotoxy(dotRan[i].cot, dotRan[i].dong);
+            cout<< ".";
+        }
+        // Ve cai dau khi ran chet
+        gotoxy(dotRan[0].cot, dotRan[0].dong);
+        cout<< "*";
+    }    
+    // Khi dau ran cham vao vien ham tra ve <true>
+	bool ktDauChamVien()
+    {
+        if(dotRan[0].cot == gocTrenTrai.cot || dotRan[0].cot == gocDuoiPhai.cot || dotRan[0].dong == gocTrenTrai.dong || dotRan[0].dong == gocDuoiPhai.dong)
+            return true;
+        return false;
+    }
+    // Khi dau ran cham phai than cua no thi ham tra ve <true>
+    bool ktDauChamThan()
+    {
+        for (int i = 1; i < doDai; i++)
+        {
+            if(dotRan[0].cot == dotRan[i].cot && dotRan[0].dong == dotRan[i].dong)
+                return true;
+        }
+        return false;
+    }
 };
 
 int main()
