@@ -61,8 +61,8 @@ public:
     void veConRan()
     {
         diChuyenCotDong(dotRan[0].cot,dotRan[0].dong);
-        cout << "O"
-        for (int i = 0; i < doDai; i++)
+        cout << "O";
+        for (int i = 1; i < doDai; i++)
         {
             diChuyenCotDong(dotRan[i].cot,dotRan[i].dong);
             cout<<"+";
