@@ -19,6 +19,7 @@ struct Point
 };
 
 int capDo = 1;// 1- de, 2 - trung binh, 3 - kho
+int diem = 0;
 Point conMoi;
 Point gocTraiTren;// góc trái trên
 Point gocPhaiDuoi;// góc phải dưới
@@ -28,7 +29,6 @@ class CONRAN
 public:
     struct Point dotRan[dotToiDa];
     int doDai = doDaiMacDinh;
-    int diem = 0;
     int tocDo = tocDoThap;
     bool lonLen = false;
     CONRAN()
@@ -97,7 +97,7 @@ void diChuyenCotDong(int cot, int dong)
 */
 void choiLai(CONRAN r) {
     // làm mới các chỉ số
-    r.diem = 0;
+    diem = 0;
     r.doDai = doDaiMacDinh;
     if (capDo == 1)
     {
@@ -151,7 +151,7 @@ void veConMoi(CONRAN r)
 
     // di chuyển con trỏ tới tọa độ của con mồi để vẽ con mồi
     diChuyenCotDong(conMoi.cot, conMoi.dong);
-    cout << "o";
+    cout << "x";
 }
 
 /**
@@ -170,6 +170,7 @@ int main()
 
     // xuất tiếng việt có dấu ra màn hình
     SetConsoleOutputCP(65001);
+    veConMoi(r);
     while (1)
     {
         if (kbhit())
@@ -180,7 +181,6 @@ int main()
             if (t=='d') Huong = 0;
             if (t=='x') Huong = 1;
         }
-        system("cls");
         r.veConRan();
         r.diChuyen(Huong);
         Sleep(300);
