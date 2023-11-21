@@ -78,8 +78,8 @@ public:
             cout<<"+";
         }
     }
-
-    void xoaConRan()
+    // ran di chuyen de lai dot cuoi cung
+    void xoaDotCuoi()
     {
         /*
         diChuyenCotDong(dotRan[0].cot, dotRan[0].dong);
@@ -229,7 +229,7 @@ int main()
         }
         r.veConRan();
         Sleep(300);
-        r.xoaConRan();
+        r.xoaDotCuoi();
         r.diChuyen(Huong);
 
     }
