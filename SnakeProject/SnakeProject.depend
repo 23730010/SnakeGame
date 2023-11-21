@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1700573409 source:c:\users\kdell15\documents\github\cpp-solutions\03.knnn\snakegame\snakeproject\main.cpp
+	<iostream>
+	<windows.h>
+	<cstdlib>
+	<conio.h>
+	<time.h>
+	<random>
+

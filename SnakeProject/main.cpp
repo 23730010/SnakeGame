@@ -58,6 +58,16 @@ public:
             dotRan[i].dong = diemBatDau.dong;
         }
     }
+    void diChuyen(int Huong)
+    {
+        for (int i = doDai-1; i>0; i--)
+            dotRan[i] = dotRan[i-1];
+        if (Huong==0) dotRan[0].cot = dotRan[0].cot + 1;
+        if (Huong==1) dotRan[0].dong = dotRan[0].dong + 1;
+        if (Huong==2) dotRan[0].cot = dotRan[0].dong - 1;
+        if (Huong==3) dotRan[0].cot = dotRan[0].dong - 1;
+
+    }
     void veConRan()
     {
         diChuyenCotDong(dotRan[0].cot,dotRan[0].dong);
@@ -68,15 +78,50 @@ public:
             cout<<"+";
         }
     }
-    void diChuyen(int Huong)
+    // ran di chuyen de lai dot cuoi cung
+    void xoaDotCuoi()
     {
-        for (int i = doDai-1; i>0; i--)
-            dotRan[i] = dotRan[i-1];
-        if (Huong==0) dotRan[0].cot = dotRan[0].cot + 1;
-        if (Huong==1) dotRan[0].dong = dotRan[0].dong + 1;
-        if (Huong==2) dotRan[0].cot = dotRan[0].dong - 1;
-        if (Huong==3) dotRan[0].cot = dotRan[0].dong - 1;
-
+        /*
+        diChuyenCotDong(dotRan[0].cot, dotRan[0].dong);
+        cout<< " ";
+        for (int i = 1; i < doDai; i++)
+        {
+            diChuyenCotDong(dotRan[i].cot, dotRan[i].dong);
+            cout<< " ";
+        }
+        */
+        // Cai tien
+        diChuyenCotDong(dotRan[doDai-1].cot, dotRan[doDai-1].dong);
+        cout<< " ";
+    }
+    void veConRanChet()
+    {
+        // Ve minh
+        for (int i = 1; i < doDai; i++)
+        {
+            diChuyenCotDong(dotRan[i].cot, dotRan[i].dong);
+            cout<< ".";
+        }
+        // Ve cai dau
+        diChuyenCotDong(dotRan[0].cot, dotRan[0].dong);
+        cout<< "*";
+    }
+    bool ktDauChamVien()
+    {
+        // Cot trai || cot phai || dong tren || dong duoi
+        if(dotRan[0].cot == gocTraiTren.cot || dotRan[0].cot == gocPhaiDuoi.cot || dotRan[0].dong == gocTraiTren.dong || dotRan[0].dong == gocPhaiDuoi.dong)
+            return true;
+        return false;
+    }
+    bool ktDauChamThan()
+    {
+        // Dau la dot [0], than tu dot [1] den do dai con ran -1
+        for (int i = 1; i < doDai; i++)
+        {
+            if(dotRan[0].cot == dotRan[i].cot && dotRan[0].dong == dotRan[i].dong)
+                return true;
+        }
+        return false;
     }
 };
 
@@ -95,7 +140,8 @@ void diChuyenCotDong(int cot, int dong)
 * Chơi lại
 * Làm mới các chỉ số của rắn tương ứng với loại trò chơi và độ khó
 */
-void choiLai(CONRAN r) {
+void choiLai(CONRAN r)
+{
     // làm mới các chỉ số
     diem = 0;
     r.doDai = doDaiMacDinh;
@@ -182,8 +228,10 @@ int main()
             if (t=='x') Huong = 1;
         }
         r.veConRan();
-        r.diChuyen(Huong);
         Sleep(300);
+        r.xoaDotCuoi();
+        r.diChuyen(Huong);
+
     }
 
     return 0;
