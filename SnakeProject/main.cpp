@@ -149,6 +149,16 @@ public:
         }
         return false;
     }
+	/**
+	* Ăn con mồi
+	*/
+	void anConMoi()
+    {
+        dotRan[doDai] = dotRan[doDai-1];
+        doDai += 1;
+        diem += 10;
+        lonLen = true;
+    }
 };
 
 /**
@@ -253,6 +263,33 @@ void khiConRanPhamQuy(CONRAN r)
     cout << "Ran chet! Choi lai hay ve Menu chinh!";
     Sleep(-1);
 }
+
+/**
+* Hiển thị điểm
+*/
+void hienThiDiem()
+{
+    diChuyenCotDong(0, 0);
+    cout << "Diem: " << diem;
+}
+
+/**
+* tạm dừng
+*/
+bool tamDung()
+{
+    while(true)
+    {
+        char nhanPhim = getch();
+        if (nhanPhim == ' ')
+            return true;
+        if (nhanPhim == 27) // ESC key
+        {
+            return false;
+        }
+    }
+}
+
 
 int main()
 {
