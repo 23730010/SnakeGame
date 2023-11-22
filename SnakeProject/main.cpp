@@ -24,6 +24,15 @@ Point conMoi;
 Point gocTraiTren;// góc trái trên
 Point gocPhaiDuoi;// góc phải dưới
 
+class CONRAN;
+void diChuyenCotDong(int cot, int dong);
+void choiLai(CONRAN r);
+bool ktConMoiTrungConRan(CONRAN r);
+void veConMoi(CONRAN r);
+void xoaConMoi();
+void khiConRanPhamQuy(CONRAN);
+Point layDiemTrungTam();
+
 class CONRAN
 {
 public:
@@ -33,11 +42,12 @@ public:
     bool lonLen = false;
     CONRAN()
     {
+        // Khoi tao khung vien gioi han ran di chuyen
         gocTraiTren.cot = 10;// tọa độ cột góc trái trên của khung trong chơi
         gocTraiTren.dong = 04;// tọa độ dòng góc trái trên của khung trò chơi
         gocPhaiDuoi.cot = 92;// tọa độ cột góc phải dưới của khung trò chơi
         gocPhaiDuoi.dong = 24;// tọa độ dòng góc phải dưới của khung trò chơi
-
+        // Khoi tao con ran
         khoiTaoThanRan();
     }
 
@@ -46,13 +56,16 @@ public:
     */
     void khoiTaoThanRan()
     {
-        // điểm bắt đầu game
+        // điểm bắt đầu game, trung tam khung vien
+        Point diemBatDau = layDiemTrungTam();
+        /*
         Point diemBatDau;
         diemBatDau.cot = (gocTraiTren.cot + gocPhaiDuoi.cot)/2;
         diemBatDau.dong = (gocTraiTren.dong + gocPhaiDuoi.dong)/2;
+        */
 
-        // khởi tạo tọa độ cho các đốt của thân rắn
-        for(int i=0; i<doDai; i++)
+        // khởi tạo tọa độ cho các đốt của thân rắn, bao gom dau ran
+        for(int i = 0; i < doDai; i++)
         {
             dotRan[i].cot = diemBatDau.cot--;
             dotRan[i].dong = diemBatDau.dong;
@@ -82,9 +95,7 @@ public:
     void xoaDotCuoi()
     {
         /*
-        diChuyenCotDong(dotRan[0].cot, dotRan[0].dong);
-        cout<< " ";
-        for (int i = 1; i < doDai; i++)
+        for (int i = 0; i < doDai; i++)
         {
             diChuyenCotDong(dotRan[i].cot, dotRan[i].dong);
             cout<< " ";
@@ -96,16 +107,17 @@ public:
     }
     void veConRanChet()
     {
-        // Ve minh
+        // Ve minh khi chet
         for (int i = 1; i < doDai; i++)
         {
             diChuyenCotDong(dotRan[i].cot, dotRan[i].dong);
             cout<< ".";
         }
-        // Ve cai dau
+        // Ve cai dau khi chet
         diChuyenCotDong(dotRan[0].cot, dotRan[0].dong);
         cout<< "*";
     }
+    /*
     bool ktDauChamVien()
     {
         // Cot trai || cot phai || dong tren || dong duoi
@@ -116,6 +128,20 @@ public:
     bool ktDauChamThan()
     {
         // Dau la dot [0], than tu dot [1] den do dai con ran -1
+        for (int i = 1; i < doDai; i++)
+        {
+            if(dotRan[0].cot == dotRan[i].cot && dotRan[0].dong == dotRan[i].dong)
+                return true;
+        }
+        return false;
+    }
+    */
+    bool ktConRanPhamQuy()
+    {
+        // Khi dau ran trùng -> Cot trai || cot phai || dong tren || dong duoi
+        if(dotRan[0].cot == gocTraiTren.cot || dotRan[0].cot == gocPhaiDuoi.cot || dotRan[0].dong == gocTraiTren.dong || dotRan[0].dong == gocPhaiDuoi.dong)
+            return true;
+        // Dau ran la dot [0] trùng than tu dot [1] den do dai con ran -1
         for (int i = 1; i < doDai; i++)
         {
             if(dotRan[0].cot == dotRan[i].cot && dotRan[0].dong == dotRan[i].dong)
@@ -135,7 +161,14 @@ void diChuyenCotDong(int cot, int dong)
     coord.Y = dong;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
-
+// Trả về điểm trung tâm khung viền
+Point layDiemTrungTam()
+{
+    Point diemTT;
+    diemTT.cot = (gocTraiTren.cot + gocPhaiDuoi.cot)/2;
+    diemTT.dong = (gocTraiTren.dong + gocPhaiDuoi.dong)/2;
+    return diemTT;
+}
 /**
 * Chơi lại
 * Làm mới các chỉ số của rắn tương ứng với loại trò chơi và độ khó
@@ -208,6 +241,23 @@ void xoaConMoi()
     diChuyenCotDong(conMoi.cot, conMoi.dong);
     cout << " ";
 }
+
+void khiConRanPhamQuy(CONRAN r)
+{
+        // Lấy tọa độ trung tâm khung viền trò chơi
+        Point diemGiua = layDiemTrungTam();
+        // Kiểm tra nếu rắn đụng biên hay cắn thân
+        if (r.ktConRanPhamQuy())
+        {
+            // Hiện con rắn chết
+            r.veConRanChet();
+            // Hiện thông báo chơi lại hay về menu chính
+            diChuyenCotDong(diemGiua.cot -15, diemGiua.dong);
+            cout << "Ran chet! Choi lai hay ve Menu chinh!";
+            Sleep(-1);
+        }
+}
+
 int main()
 {
     CONRAN r;
@@ -231,7 +281,7 @@ int main()
         Sleep(300);
         r.xoaDotCuoi();
         r.diChuyen(Huong);
-
+        khiConRanPhamQuy(r);
     }
 
     return 0;
