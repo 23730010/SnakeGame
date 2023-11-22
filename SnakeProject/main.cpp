@@ -461,7 +461,7 @@ void veMenu(int &doKho)
         diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 1);
         cout << "3: Khó" << endl;
         diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 2);
-        capDo = getch();   
+        capDo = getch();
         //cin >> capDo;
     }
     while(capDo != '1' && capDo != '2' & capDo != '3');
@@ -482,13 +482,14 @@ void veMenu(int &doKho)
 }
 void khiConRanPhamQuy(CONRAN r)
 {
+    SetConsoleOutputCP(65001);
     // Lấy tọa độ trung tâm khung viền trò chơi
     Point diemGiua = layDiemTrungTam();
     // Hiện con rắn chết
     r.veConRanChet();
     // Hiện thông báo chơi lại hay về menu chính
     diChuyenCotDong(diemGiua.cot -15, diemGiua.dong);
-    cout << "Ran chet! Choi lai hay ve Menu chinh!";
+    cout << "RẮN ĐÃ CHẾT!!!! R(Chơi lại) - M(Menu)";
     Sleep(-1);
 }
 
