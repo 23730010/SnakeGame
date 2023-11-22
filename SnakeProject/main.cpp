@@ -173,7 +173,7 @@ void veKhungVienChinh()
     {
         diChuyenCotDong(i + 5, gocTraiTren.dong + 1); // Dòng trên cùng
         cout << (char)205;
-        diChuyenCotDong(i + 6, gocPhaiDuoi.dong + 1); // Dòng bóng đỏ
+        diChuyenCotDong(i + 6, gocPhaiDuoi.dong + 1); // Dòng đổ bóng dưới cùng
         cout << (char)176;
         diChuyenCotDong(i + 5, gocPhaiDuoi.dong); // Dòng dưới cùng
         cout << (char)205;
@@ -182,10 +182,10 @@ void veKhungVienChinh()
     {
         diChuyenCotDong(gocTraiTren.cot + 5, i); // Cột bên trái
         cout << (char)186;
-        diChuyenCotDong(gocPhaiDuoi.cot + 6, i + 1); // Cột bóng đỏ 1
+        diChuyenCotDong(gocPhaiDuoi.cot + 7, i + 1); // Cột đổ bóng bên phải
         cout << (char)176;
-        diChuyenCotDong(gocTraiTren.cot + 7, i + 1); // Cột bóng đỏ 2
-        cout << (char)176;
+        // diChuyenCotDong(gocTraiTren.cot + 7, i + 1); // Cột đổ bóng 2
+        // cout << (char)176;
         diChuyenCotDong(gocPhaiDuoi.cot + 5, i); // Cột phải
         cout << (char)186;
     }
@@ -198,7 +198,7 @@ void veKhungVienChinh()
     cout << (char)200;
     diChuyenCotDong(gocPhaiDuoi.cot + 5, gocPhaiDuoi.dong);
     cout << (char)188;
-    // Vẽ góc bóng đỏ
+    // Vẽ góc đổ bóng
     diChuyenCotDong(gocPhaiDuoi.cot + 6, gocPhaiDuoi.dong + 1);
     cout << (char)176;
     diChuyenCotDong(gocPhaiDuoi.cot + 7, gocPhaiDuoi.dong + 1);
@@ -338,22 +338,25 @@ void veMenu(int &doKho)
 {
     system("cls");
     int x;
-    diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong -3);
+    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -3);
     cout<< "CHƯƠNG TRÌNH RẮN SĂN MỒI";
     do
     {
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong -2);
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -2);
         cout << "Chọn chế độ chơi" << endl;
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong -1);
+        diChuyenCotDong(gocTraiTren.cot + 35, gocPhaiDuoi.dong + 4);
+        cout << "Dùng phím số để chọn chế độ chơi";
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -1);
         cout << "1: Cổ điển" << endl;
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong);
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong);
         cout << "2: Hiện đại" << endl;
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong + 1);
-        cin >> x;
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 1);
+        x = getch();
+        //cin >> x;
     }
-    while(x != 1 && x != 2);
+    while(x != '1' && x != '2');
 
-    if (x == 2)
+    if (x == '2')
     {
         choPhepXuyenTuong = true;
     }
@@ -363,32 +366,35 @@ void veMenu(int &doKho)
     }
 
     system("cls");
-    diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong -3);
+    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -3);
     cout<< "CHƯƠNG TRÌNH RẮN SĂN MỒI";
     do
     {
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong -2);
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -2);
         cout << "Chọn độ khó" << endl;
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong -1);
+        diChuyenCotDong(gocTraiTren.cot + 35, gocPhaiDuoi.dong + 4);
+        cout << "Dùng phím số để chọn độ khó";
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -1);
         cout << "1: Dễ" << endl;
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong);
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong);
         cout << "2: Trung bình" << endl;
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong + 1);
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 1);
         cout << "3: Khó" << endl;
-        diChuyenCotDong(gocTraiTren.cot + 24, gocTraiTren.dong + 2);
-        cin >> capDo;
+        diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 2);
+        capDo = getch();   
+        //cin >> capDo;
     }
-    while(capDo != 1 && capDo != 2 & capDo != 3);
+    while(capDo != '1' && capDo != '2' & capDo != '3');
 
-    if (capDo == 1)
+    if (capDo == '1')
     {
         doKho = 500;
     }
-    if (capDo == 2)
+    if (capDo == '2')
     {
         doKho = 300;
     }
-    if (capDo == 3)
+    if (capDo == '3')
     {
         doKho = 150;
     }
