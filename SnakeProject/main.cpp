@@ -244,18 +244,14 @@ void xoaConMoi()
 
 void khiConRanPhamQuy(CONRAN r)
 {
-        // Lấy tọa độ trung tâm khung viền trò chơi
-        Point diemGiua = layDiemTrungTam();
-        // Kiểm tra nếu rắn đụng biên hay cắn thân
-        if (r.ktConRanPhamQuy())
-        {
-            // Hiện con rắn chết
-            r.veConRanChet();
-            // Hiện thông báo chơi lại hay về menu chính
-            diChuyenCotDong(diemGiua.cot -15, diemGiua.dong);
-            cout << "Ran chet! Choi lai hay ve Menu chinh!";
-            Sleep(-1);
-        }
+    // Lấy tọa độ trung tâm khung viền trò chơi
+    Point diemGiua = layDiemTrungTam();
+    // Hiện con rắn chết
+    r.veConRanChet();
+    // Hiện thông báo chơi lại hay về menu chính
+    diChuyenCotDong(diemGiua.cot -15, diemGiua.dong);
+    cout << "Ran chet! Choi lai hay ve Menu chinh!";
+    Sleep(-1);
 }
 
 int main()
@@ -281,7 +277,9 @@ int main()
         Sleep(300);
         r.xoaDotCuoi();
         r.diChuyen(Huong);
-        khiConRanPhamQuy(r);
+        // Kiểm tra nếu rắn đụng biên hay cắn thân
+        if (r.ktConRanPhamQuy())
+            khiConRanPhamQuy(r);
     }
 
     return 0;
