@@ -75,11 +75,35 @@ public:
     {
         for (int i = doDai-1; i>0; i--)
             dotRan[i] = dotRan[i-1];
-        if (Huong==0) dotRan[0].cot = dotRan[0].cot + 1;
-        if (Huong==1) dotRan[0].dong = dotRan[0].dong + 1;
-        if (Huong==2) dotRan[0].cot = dotRan[0].dong - 1;
-        if (Huong==3) dotRan[0].cot = dotRan[0].dong - 1;
+        if (Huong == 0) dotRan[0].cot = dotRan[0].cot + 1;
+        if (Huong == 1) dotRan[0].dong = dotRan[0].dong + 1;
+        if (Huong == 2) dotRan[0].cot = dotRan[0].cot - 1;  // Fix hướng đi
+        if (Huong == 3) dotRan[0].dong = dotRan[0].dong - 1;  // Fix hướng đi
 
+        // Điều chỉnh tọa độ nếu rắn đi qua tường
+        dieuChinhToaDoQuaTuong(dotRan[0]);
+    }
+
+    // Hàm điều chỉnh tọa độ khi rắn đi qua tường
+    void dieuChinhToaDoQuaTuong(Point& head)
+    {
+    // Kiểm tra xem đầu rắn có ra khỏi màn hình không
+        if (head.cot < gocTraiTren.cot)
+        {
+            head.cot = gocPhaiDuoi.cot - 1;  // Nếu đi ra khỏi bên trái, đặt lại ở bên phải
+        }
+        else if (head.cot >= gocPhaiDuoi.cot)
+        {
+            head.cot = gocTraiTren.cot;  // Nếu đi ra khỏi bên phải, đặt lại ở bên trái
+        }
+        else if (head.dong < gocTraiTren.dong)
+        {
+            head.dong = gocPhaiDuoi.dong - 1;  // Nếu đi ra khỏi phía trên, đặt lại ở phía dưới
+        }
+        else if (head.dong >= gocPhaiDuoi.dong)
+        {
+            head.dong = gocTraiTren.dong;  // Nếu đi ra khỏi phía dưới, đặt lại ở phía trên
+        }
     }
     void veConRan()
     {
@@ -290,6 +314,14 @@ bool tamDung()
     }
 }
 
+// Ẩn con trỏ
+void Nocursortype()
+{
+    CONSOLE_CURSOR_INFO Info;
+    Info.bVisible = FALSE;
+    Info.dwSize = 20;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+}
 
 int main()
 {
@@ -299,21 +331,29 @@ int main()
 
     // xuất tiếng việt có dấu ra màn hình
     SetConsoleOutputCP(65001);
+    // Ẩn con trỏ
+    Nocursortype();
     veConMoi(r);
     while (1)
     {
         if (kbhit())
         {
-            t = getch();
-            if (t=='a') Huong = 2;
-            if (t=='w') Huong = 3;
-            if (t=='d') Huong = 0;
-            if (t=='x') Huong = 1;
+            // Đọc phím vừa nhấn
+            char t = getch();
+            if (t=='a' && Huong != 0) Huong = 2;
+            if (t=='w' && Huong != 1) Huong = 3;
+            if (t=='d' && Huong != 2) Huong = 0;
+            if (t=='x' && Huong != 3) Huong = 1;
+            // Các hướng mũi tên
+            if (t == 72 && Huong != 1) Huong = 3;  // Mũi tên lên
+            if (t == 80 && Huong != 3) Huong = 1;  // Mũi tên xuống
+            if (t == 75 && Huong != 0) Huong = 2;  // Mũi tên sang trái
+            if (t == 77 && Huong != 2) Huong = 0;  // Mũi tên sang phải
         }
+        r.diChuyen(Huong);
         r.veConRan();
         Sleep(300);
         r.xoaDotCuoi();
-        r.diChuyen(Huong);
         // Kiểm tra nếu rắn đụng biên hay cắn thân
         if (r.ktConRanPhamQuy())
             khiConRanPhamQuy(r);
