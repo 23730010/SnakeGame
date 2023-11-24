@@ -25,6 +25,7 @@ Point gocTraiTren;// góc trái trên
 Point gocPhaiDuoi;// góc phải dưới
 bool choPhepXuyenTuong = false;
 int doKho = 300;
+UINT oldcodepage;
 
 class CONRAN;
 void diChuyenCotDong(int cot, int dong);
@@ -33,6 +34,8 @@ bool ktConMoiTrungConRan(CONRAN r);
 void veConMoi(CONRAN r);
 void xoaConMoi();
 void khiConRanPhamQuy(CONRAN);
+void manHinhChinh(CONRAN*);
+void veLaiDiemVienBiXoa(CONRAN);
 Point layDiemTrungTam();
 
 class CONRAN
@@ -242,17 +245,15 @@ Point layDiemTrungTam()
 *   Chơi lại
 *   Làm mới các chỉ số của rắn tương ứng với loại trò chơi và độ khó
 */
-void choiLai(CONRAN *r)
+void lamMoiRan(CONRAN *r)
 {
     // làm mới các chỉ số
     r->xoaConRan();
+    veLaiDiemVienBiXoa(*r);
     diem = 0;
     r->doDai = doDaiMacDinh;
     r->tocDo = doKho;
     r->khoiTaoThanRan();
-    xoaConMoi();
-    veConMoi(*r);
-    r->veThanRan();
 }
 
 /**
@@ -362,9 +363,9 @@ void hienThiThongTin()
     cout<< "Phím Mũi tên hay <A-X-W-D> để Di chuyển";
     diChuyenCotDong(gocPhaiDuoi.cot - 32, gocPhaiDuoi.dong + 3);
     cout<< "<R> Chơi lại >><< Để gọi Menu <M>";
-    diChuyenCotDong(gocTraiTren.cot, gocPhaiDuoi.dong + 4);
+    diChuyenCotDong(gocTraiTren.cot + 4, gocPhaiDuoi.dong + 4);
     cout<< "Dùng phím <SPACE> để Tạm dừng";
-    diChuyenCotDong(gocPhaiDuoi.cot - 21, gocPhaiDuoi.dong + 4);
+    diChuyenCotDong(gocPhaiDuoi.cot - 28, gocPhaiDuoi.dong + 4);
     cout<< "Dùng phím <ESC> để Thoát";
 
     // In ra độ khó
@@ -414,16 +415,16 @@ void hienThiDiem()
 /*
 Hàm vẽ bảng thông báo
 */
-
 void bangThongBao()
 {
+    SetConsoleOutputCP(oldcodepage);
     int tamCot = (gocTraiTren.cot + gocPhaiDuoi.cot) / 2;
     int tamDong = (gocTraiTren.dong + gocPhaiDuoi.dong) / 2;
     int cdBang = 22;
     int crBang = 3;
     for (int i = (tamCot - cdBang/2) + 1; i < tamCot+cdBang/2; i++)
     {
-        diChuyenCotDong(i, tamCot - crBang/2); // Dòng trên
+        diChuyenCotDong(i, tamDong - crBang/2); // Dòng trên
         cout << (char)196;
         diChuyenCotDong(i, tamDong+crBang/2); //Dòng dưới
         cout << (char)196;
@@ -447,6 +448,7 @@ void bangThongBao()
     diChuyenCotDong(tamCot + cdBang/2, tamDong + crBang/2);
     cout << (char)217;
 
+    SetConsoleOutputCP(65001);
     // Thông báo thua
     diChuyenCotDong(tamCot - 6, tamDong - 1);
     cout << "RẮN ĐÃ CHẾT!!!!";
@@ -477,83 +479,160 @@ Vẽ Menu cho trò chơi
 void veMenu()
 {
     system("cls");
-    int x;
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -3);
+    char x;
+    diChuyenCotDong(gocTraiTren.cot + 30, gocTraiTren.dong -4);
     cout<< "CHƯƠNG TRÌNH RẮN SĂN MỒI";
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -2);
+    diChuyenCotDong(gocTraiTren.cot + 35, gocTraiTren.dong -3);
     cout << "Chọn chế độ chơi" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 35, gocPhaiDuoi.dong + 4);
+    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 4);
     cout << "Dùng phím số để chọn chế độ chơi";
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -1);
+    diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong -1);
     cout << "1: Cổ điển" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong);
+    diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong);
     cout << "2: Hiện đại" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 1);
+    diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong + 1);
     do
     {
         x = getch();
     }
-    while(x != '1' && x != '2');
+    while(x != '1' && x != '2' && x!=27);
 
     if (x == '2')
     {
         choPhepXuyenTuong = true;
     }
-    else
+    else if (x == '1')
     {
         choPhepXuyenTuong = false;
     }
+    else if (x == 27)
+    {
+        system("cls");
+        exit(0);
+    }
 
     system("cls");
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -3);
+    diChuyenCotDong(gocTraiTren.cot + 30, gocTraiTren.dong -4);
     cout<< "CHƯƠNG TRÌNH RẮN SĂN MỒI";
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -2);
+    diChuyenCotDong(gocTraiTren.cot + 35, gocTraiTren.dong -3);
     cout << "Chọn độ khó" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 35, gocPhaiDuoi.dong + 4);
+    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 4);
     cout << "Dùng phím số để chọn độ khó";
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong -1);
+    diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong -1);
     cout << "1: Dễ" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong);
+    diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong);
     cout << "2: Trung bình" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 1);
+    diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong + 1);
     cout << "3: Khó" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 40, gocTraiTren.dong + 2);
+    diChuyenCotDong(gocTraiTren.cot + 30, gocTraiTren.dong + 2);
     do
     {
         capDo = getch();
     }
-    while(capDo != '1' && capDo != '2' & capDo != '3');
+    while(capDo != '1' && capDo != '2' & capDo != '3' && capDo != 27);
 
     if (capDo == '1')
     {
-        doKho = 500;
+        doKho = tocDoThap;
     }
-    if (capDo == '2')
+    else if (capDo == '2')
     {
-        doKho = 300;
+        doKho = tocDoTrungBinh;
     }
-    if (capDo == '3')
+    else if (capDo == '3')
     {
-        doKho = 150;
+        doKho = tocDoCao;
+    }
+    else if (capDo == 27)
+    {
+        system("cls");
+        exit(0);
     }
     system("cls");
 }
 /**
+*   vẽ lại điểm viền khung bị thay dổi khi rắn chạm viền
+*/
+void veLaiDiemVienBiXoa(CONRAN r)
+{
+    Point dauRan = r.dotRan[0];
+    SetConsoleOutputCP(oldcodepage);
+    diChuyenCotDong(dauRan.cot, dauRan.dong);
+    if(dauRan.cot == gocTraiTren.cot)
+    {
+        cout << (char)186;
+    }
+    else if (dauRan.cot == gocPhaiDuoi.cot)
+    {
+        cout << (char)186;
+    }
+    else if(dauRan.dong == gocTraiTren.dong)
+    {
+        cout<< (char)205;
+    }
+    else if(dauRan.dong == gocPhaiDuoi.dong)
+    {
+        cout<< (char)205;
+    }
+    SetConsoleOutputCP(65001);
+}
+/**
 * Khi con rắn phạm quy
 */
-void khiConRanPhamQuy(CONRAN r)
+void khiConRanPhamQuy(CONRAN *r, int &Huong)
 {
+    char x;
     SetConsoleOutputCP(65001);
     // Lấy tọa độ trung tâm khung viền trò chơi
     Point diemGiua = layDiemTrungTam();
     // Hiện con rắn chết
-    r.veConRanChet();
+    r->veConRanChet();
     // Hiện thông báo chơi lại hay về menu chính
-    diChuyenCotDong(diemGiua.cot -15, diemGiua.dong);
-    cout << "RẮN ĐÃ CHẾT!!!! R(Chơi lại) - M(Menu)";
-    Sleep(-1);
-}
+    bangThongBao();
+    do
+    {
+        x = getch();
+    } while (x != 'r' && x != 'R' && x != 27 && x != 'm' && x != 'M');
 
+    if (x=='r' || x=='R')
+    {
+        xoaBangThongBao();
+        lamMoiRan(r);
+        r->veThanRan();
+        xoaConMoi();
+        veConMoi(*r);
+        Huong = 0;
+    }
+    else if (x=='m' || x=='M')
+    {
+        Huong = 0;
+        lamMoiRan(r);
+        manHinhChinh(r);
+        r->tocDo = doKho;
+        veConMoi(*r);
+        r->veThanRan();
+    }
+    else if (x = 27)
+    {
+        system("cls");
+        exit(0);
+    }
+}
+/**
+*   Màn hình chính
+*/
+void manHinhChinh(CONRAN *r)
+{
+    system("cls");
+    diem = 0;
+    veMenu();
+    hienThiThongTin();
+    hienThiDiem();
+
+    SetConsoleOutputCP(oldcodepage);
+    veKhungVienChinh();
+
+}
 /**
 * tạm dừng
 */
@@ -577,18 +656,10 @@ int main()
     CONRAN r;
     int Huong = 0;
     char t;
-    UINT oldcodepage = GetConsoleOutputCP();
+    oldcodepage = GetConsoleOutputCP();
     // xuất tiếng việt có dấu ra màn hình
     SetConsoleOutputCP(65001);
-    // vẽ menu
-    veMenu();
-
-    /// vẽ
-    hienThiThongTin();
-    hienThiDiem();
-    SetConsoleOutputCP(oldcodepage);
-    veKhungVienChinh();
-
+    manHinhChinh(&r);
     r.tocDo = doKho;
     veConMoi(r);
     r.veThanRan();
@@ -598,7 +669,7 @@ int main()
         // Kiểm tra nếu rắn đụng biên hay cắn thân
         if (r.ktConRanPhamQuy())
         {
-            khiConRanPhamQuy(r);
+            khiConRanPhamQuy(&r, Huong);
         }
         Sleep(r.tocDo);
         if (kbhit())
@@ -611,8 +682,24 @@ int main()
             else if (t == ' ') tamDung();
             else if (t=='r' || t=='R')
             {
-                choiLai(&r);
+                lamMoiRan(&r);
+                r.veThanRan();
+                xoaConMoi();
+                veConMoi(r);
                 Huong = 0;
+            }
+            else if (t=='m' || t == 'M')
+            {
+                Huong = 0;
+                lamMoiRan(&r);
+                manHinhChinh(&r);
+                r.tocDo = doKho;
+                veConMoi(r);
+                r.veThanRan();
+            } else if (t==27)
+            {
+                system("cls");
+                return 0;
             }
 
         }
@@ -621,7 +708,7 @@ int main()
             r.anConMoi();
             veConMoi(r);
             hienThiDiem();
-            if (r.tocDo >= 100 && diem > 0 && diem%10 == 0)
+            if (r.tocDo >= 100 && diem > 0 && diem%50 == 0)
             {
                 r.tocDo -= 20;
             }
