@@ -81,11 +81,12 @@ public:
         if (Huong == 3) dotRan[0].dong = dotRan[0].dong - 1;  // Fix hướng đi
 
         // Điều chỉnh tọa độ nếu rắn đi qua tường
-        dieuChinhToaDoQuaTuong(dotRan[0]);
+        if(choPhepQuaTuong)
+            ranDiChuyenQuaTuong(dotRan[0]);
     }
 
     // Hàm điều chỉnh tọa độ khi rắn đi qua tường
-    void dieuChinhToaDoQuaTuong(Point& head)
+    void ranDiChuyenQuaTuong(Point& head)
     {
     // Kiểm tra xem đầu rắn có ra khỏi màn hình không
         if (head.cot < gocTraiTren.cot)
