@@ -113,8 +113,8 @@ public:
         if (Huong==3) dotRan[0].dong = dotRan[0].dong - 1;// đi lên
 
         // Điều chỉnh tọa độ nếu rắn đi qua tường
-        if(choPhepQuaTuong)
-            ranDiChuyenQuaTuong(dotRan[0]);
+        //if(choPhepQuaTuong)
+        ranDiChuyenQuaTuong(dotRan[0]);
     }
 
     // Hàm điều chỉnh tọa độ khi rắn đi qua tường
@@ -751,7 +751,9 @@ void hienThiDiemCao()
     diChuyenCotDong(gocPhaiDuoi.cot + 4, 1);
     cout << "Điểm cao: " << diemCao << "/" << luotChoi;
 }
-// Ẩn con trỏ
+/**
+*   Ẩn con trỏ
+*/
 void Nocursortype()
 {
     CONSOLE_CURSOR_INFO Info;
