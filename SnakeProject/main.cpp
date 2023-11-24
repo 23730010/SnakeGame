@@ -12,19 +12,25 @@ using namespace std;
 #define tocDoThap 400
 #define tocDoTrungBinh 300
 #define tocDoCao 150
+
 void diChuyenCotDong(int cot, int dong);
 struct Point
 {
     int cot, dong;
 };
 
+char trangThaiDung[17] = "Tạm Dừng... ";
+char trangThaiDangChoi[17] = "Đang Chơi...";
+char trangThaiKetThuc[17] = "Kết Thúc... ";
 int capDo = 1;// 1- de, 2 - trung binh, 3 - kho
 int diem = 0;
+int diemCao = 0;
 Point conMoi;
 Point gocTraiTren;// góc trái trên
 Point gocPhaiDuoi;// góc phải dưới
 bool choPhepXuyenTuong = false;
 int doKho = 300;
+int luotChoi = 0;
 UINT oldcodepage;
 
 class CONRAN;
@@ -36,6 +42,12 @@ void xoaConMoi();
 void khiConRanPhamQuy(CONRAN);
 void manHinhChinh(CONRAN*);
 void veLaiDiemVienBiXoa(CONRAN);
+void hienTrangThai(char[]);
+void thaoTacPhimR(CONRAN*, int&);
+void thaoTacPhimM(CONRAN*, int&);
+void thaoTacPhimEsc();
+void hienThiDiem();
+void hienThiDiemCao();
 Point layDiemTrungTam();
 
 class CONRAN
@@ -254,6 +266,7 @@ void lamMoiRan(CONRAN *r)
     r->doDai = doDaiMacDinh;
     r->tocDo = doKho;
     r->khoiTaoThanRan();
+    hienThiDiem();
 }
 
 /**
@@ -375,19 +388,18 @@ void hienThiThongTin()
     switch (capDo)
     {
     case 1:
-        cout << "   Dễ";
+        cout << "---Dễ---";
         break;
     case 2:
         cout << "Trung Bình";
         break;
     case 3:
-        cout << "   Khó";
+        cout << "---Khó---";
         break;
     }
     diChuyenCotDong(1, gocTraiTren.dong + 8);
     cout << "TRẠNG THÁI";
-    diChuyenCotDong(1, gocTraiTren.dong + 9);
-    cout << "Đang dùng...";
+    hienTrangThai(trangThaiDangChoi);
     diChuyenCotDong(2, 1);
     cout << "TIGER BẠC";
     diChuyenCotDong(1, 2);
@@ -400,7 +412,6 @@ void hienThiThongTin()
 /*
  Hàm hiển thị điểm
 */
-
 void hienThiDiem()
 {
     SetConsoleOutputCP(65001);
@@ -475,7 +486,6 @@ void xoaBangThongBao()
 /*
 Vẽ Menu cho trò chơi
 */
-
 void veMenu()
 {
     system("cls");
@@ -527,23 +537,26 @@ void veMenu()
     diChuyenCotDong(gocTraiTren.cot + 30, gocTraiTren.dong + 2);
     do
     {
-        capDo = getch();
+        x = getch();
     }
-    while(capDo != '1' && capDo != '2' & capDo != '3' && capDo != 27);
+    while(x != '1' && x != '2' & x != '3' && x != 27);
 
-    if (capDo == '1')
+    if (x == '1')
     {
+        capDo = 1;
         doKho = tocDoThap;
     }
-    else if (capDo == '2')
+    else if (x == '2')
     {
+        capDo = 2;
         doKho = tocDoTrungBinh;
     }
-    else if (capDo == '3')
+    else if (x == '3')
     {
+        capDo = 3;
         doKho = tocDoCao;
     }
-    else if (capDo == 27)
+    else if (x == 27)
     {
         system("cls");
         exit(0);
@@ -583,12 +596,18 @@ void khiConRanPhamQuy(CONRAN *r, int &Huong)
 {
     char x;
     SetConsoleOutputCP(65001);
+
+    luotChoi = luotChoi + 1;
+    if (diem > diemCao)
+        diemCao = diem;
+    hienThiDiemCao();
     // Lấy tọa độ trung tâm khung viền trò chơi
     Point diemGiua = layDiemTrungTam();
     // Hiện con rắn chết
     r->veConRanChet();
     // Hiện thông báo chơi lại hay về menu chính
     bangThongBao();
+    hienTrangThai(trangThaiKetThuc);
     do
     {
         x = getch();
@@ -597,20 +616,11 @@ void khiConRanPhamQuy(CONRAN *r, int &Huong)
     if (x=='r' || x=='R')
     {
         xoaBangThongBao();
-        lamMoiRan(r);
-        r->veThanRan();
-        xoaConMoi();
-        veConMoi(*r);
-        Huong = 0;
+        thaoTacPhimR(r, Huong);
     }
     else if (x=='m' || x=='M')
     {
-        Huong = 0;
-        lamMoiRan(r);
-        manHinhChinh(r);
-        r->tocDo = doKho;
-        veConMoi(*r);
-        r->veThanRan();
+        thaoTacPhimM(r, Huong);
     }
     else if (x = 27)
     {
@@ -631,26 +641,91 @@ void manHinhChinh(CONRAN *r)
 
     SetConsoleOutputCP(oldcodepage);
     veKhungVienChinh();
-
+    hienThiDiemCao();
 }
+
 /**
 * tạm dừng
 */
-bool tamDung()
+void tamDung(CONRAN *r, int &Huong)
 {
+    SetConsoleOutputCP(65001);
+    hienTrangThai(trangThaiDung);
     while(true)
     {
         char nhanPhim = getch();
         if (nhanPhim == ' ')
-            return true;
-        if (nhanPhim == 27) // ESC key
         {
-            return false;
+            hienTrangThai(trangThaiDangChoi);
+            return;
+
         }
+        else if (nhanPhim=='r' || nhanPhim=='R')
+        {
+            thaoTacPhimR(r, Huong);
+            return;
+        }
+        else if (nhanPhim=='m' || nhanPhim=='M')
+        {
+            thaoTacPhimM(r, Huong);
+            return;
+        }
+        else if (nhanPhim = 27)
+        {
+            thaoTacPhimEsc();
+        }
+
     }
 }
-
-
+/**
+*
+*/
+void hienTrangThai(char trangThai[])
+{
+    diChuyenCotDong(1, gocTraiTren.dong + 9);
+    cout << trangThai;
+}
+/**
+*   thao tác phím R
+*/
+void thaoTacPhimR(CONRAN *r, int &Huong)
+{
+    lamMoiRan(r);
+    r->veThanRan();
+    xoaConMoi();
+    veConMoi(*r);
+    Huong = 0;
+    hienTrangThai(trangThaiDangChoi);
+}
+/**
+*   Thao tác phím M
+*/
+void thaoTacPhimM(CONRAN *r, int &Huong)
+{
+    Huong = 0;
+    lamMoiRan(r);
+    manHinhChinh(r);
+    r->tocDo = doKho;
+    veConMoi(*r);
+    r->veThanRan();
+}
+/**
+*   thao tác phím Esc
+*/
+void thaoTacPhimEsc()
+{
+    system("cls");
+    exit(0);
+}
+/**
+*   hiện điểm cao nhât
+*/
+void hienThiDiemCao()
+{
+    SetConsoleOutputCP(65001);
+    diChuyenCotDong(gocPhaiDuoi.cot + 4, 1);
+    cout << "Điểm cao: " << diemCao << "/" << luotChoi;
+}
 int main()
 {
     CONRAN r;
@@ -679,27 +754,17 @@ int main()
             else if ((t=='w' || t=='W') && Huong != 1) Huong = 3;
             else if ((t=='d' || t=='D') && Huong != 2) Huong = 0;
             else if ((t=='x' || t=='X') && Huong != 3) Huong = 1;
-            else if (t == ' ') tamDung();
+            else if (t == ' ') tamDung(&r, Huong);
             else if (t=='r' || t=='R')
             {
-                lamMoiRan(&r);
-                r.veThanRan();
-                xoaConMoi();
-                veConMoi(r);
-                Huong = 0;
+                thaoTacPhimR(&r, Huong);
             }
             else if (t=='m' || t == 'M')
             {
-                Huong = 0;
-                lamMoiRan(&r);
-                manHinhChinh(&r);
-                r.tocDo = doKho;
-                veConMoi(r);
-                r.veThanRan();
+                thaoTacPhimM(&r, Huong);
             } else if (t==27)
             {
-                system("cls");
-                return 0;
+                thaoTacPhimEsc();
             }
 
         }
