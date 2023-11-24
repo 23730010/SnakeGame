@@ -28,7 +28,7 @@ int diemCao = 0;
 Point conMoi;
 Point gocTraiTren;// góc trái trên
 Point gocPhaiDuoi;// góc phải dưới
-bool choPhepXuyenTuong = false;
+bool choPhepQuaTuong = false;
 int doKho = 300;
 int luotChoi = 0;
 UINT oldcodepage;
@@ -113,30 +113,22 @@ public:
         if (Huong==3) dotRan[0].dong = dotRan[0].dong - 1;// đi lên
 
         // Điều chỉnh tọa độ nếu rắn đi qua tường
-        //if(choPhepQuaTuong)
-        ranDiChuyenQuaTuong(dotRan[0]);
+        if(choPhepQuaTuong)
+        ranDiChuyenQuaTuong();
     }
 
     // Hàm điều chỉnh tọa độ khi rắn đi qua tường
-    void ranDiChuyenQuaTuong(Point& head)
+    void ranDiChuyenQuaTuong()
     {
-    // Kiểm tra xem đầu rắn có ra khỏi màn hình không
-        if (head.cot < gocTraiTren.cot)
-        {
-            head.cot = gocPhaiDuoi.cot - 1;  // Nếu đi ra khỏi bên trái, đặt lại ở bên phải
-        }
-        else if (head.cot >= gocPhaiDuoi.cot)
-        {
-            head.cot = gocTraiTren.cot;  // Nếu đi ra khỏi bên phải, đặt lại ở bên trái
-        }
-        else if (head.dong < gocTraiTren.dong)
-        {
-            head.dong = gocPhaiDuoi.dong - 1;  // Nếu đi ra khỏi phía trên, đặt lại ở phía dưới
-        }
-        else if (head.dong >= gocPhaiDuoi.dong)
-        {
-            head.dong = gocTraiTren.dong;  // Nếu đi ra khỏi phía dưới, đặt lại ở phía trên
-        }
+        // Kiểm tra xem đầu rắn có ra khỏi màn hình không
+        if (dotRan[0].cot == gocTraiTren.cot )
+            dotRan[0].cot = gocPhaiDuoi.cot - 1;
+        else if (dotRan[0].cot == gocPhaiDuoi.cot )
+            dotRan[0].cot = gocTraiTren.cot + 1;
+        else if (dotRan[0].dong == gocTraiTren.dong )
+            dotRan[0].dong = gocPhaiDuoi.dong - 1;
+        else if (dotRan[0].dong == gocPhaiDuoi.dong )
+            dotRan[0].dong = gocTraiTren.dong + 1;
     }
     /**
     *   vẽ con rắn
@@ -227,7 +219,7 @@ public:
     */
     bool ktConRanChamKhung()
     {
-        if (choPhepXuyenTuong)
+        if (choPhepQuaTuong)
         {
             return false;
         }
@@ -519,13 +511,14 @@ void veMenu()
     cout<< "CHƯƠNG TRÌNH RẮN SĂN MỒI";
     diChuyenCotDong(gocTraiTren.cot + 35, gocTraiTren.dong -3);
     cout << "Chọn chế độ chơi" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 4);
+    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 3);
     cout << "Dùng phím số để chọn chế độ chơi";
     diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong -1);
     cout << "1: Cổ điển" << endl;
     diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong);
     cout << "2: Hiện đại" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong + 1);
+    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 4);
+    cout << "Dùng phím <ESC> để thoát chương trình" << endl;
     do
     {
         x = getch();
@@ -534,11 +527,11 @@ void veMenu()
 
     if (x == '2')
     {
-        choPhepXuyenTuong = true;
+        choPhepQuaTuong = true;
     }
     else if (x == '1')
     {
-        choPhepXuyenTuong = false;
+        choPhepQuaTuong = false;
     }
     else if (x == 27)
     {
@@ -551,7 +544,7 @@ void veMenu()
     cout<< "CHƯƠNG TRÌNH RẮN SĂN MỒI";
     diChuyenCotDong(gocTraiTren.cot + 35, gocTraiTren.dong -3);
     cout << "Chọn độ khó" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 4);
+    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 3);
     cout << "Dùng phím số để chọn độ khó";
     diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong -1);
     cout << "1: Dễ" << endl;
@@ -559,7 +552,8 @@ void veMenu()
     cout << "2: Trung bình" << endl;
     diChuyenCotDong(gocTraiTren.cot + 34, gocTraiTren.dong + 1);
     cout << "3: Khó" << endl;
-    diChuyenCotDong(gocTraiTren.cot + 30, gocTraiTren.dong + 2);
+    diChuyenCotDong(gocTraiTren.cot + 25, gocPhaiDuoi.dong + 4);
+    cout << "Dùng phím <ESC> để thoát chương trình" << endl;
     do
     {
         x = getch();
@@ -754,7 +748,7 @@ void hienThiDiemCao()
 /**
 *   Ẩn con trỏ
 */
-void Nocursortype()
+void anConTro()
 {
     CONSOLE_CURSOR_INFO Info;
     Info.bVisible = FALSE;
@@ -770,7 +764,7 @@ int main()
     // xuất tiếng việt có dấu ra màn hình
     SetConsoleOutputCP(65001);
     // Ẩn con trỏ
-    Nocursortype();
+    anConTro();
     manHinhChinh(&r);
     r.tocDo = doKho;
     veConMoi(r);
