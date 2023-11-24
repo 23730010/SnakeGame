@@ -112,6 +112,31 @@ public:
         if (Huong==2) dotRan[0].cot = dotRan[0].cot - 1;// rẽ trái
         if (Huong==3) dotRan[0].dong = dotRan[0].dong - 1;// đi lên
 
+        // Điều chỉnh tọa độ nếu rắn đi qua tường
+        //if(choPhepQuaTuong)
+        ranDiChuyenQuaTuong(dotRan[0]);
+    }
+
+    // Hàm điều chỉnh tọa độ khi rắn đi qua tường
+    void ranDiChuyenQuaTuong(Point& head)
+    {
+    // Kiểm tra xem đầu rắn có ra khỏi màn hình không
+        if (head.cot < gocTraiTren.cot)
+        {
+            head.cot = gocPhaiDuoi.cot - 1;  // Nếu đi ra khỏi bên trái, đặt lại ở bên phải
+        }
+        else if (head.cot >= gocPhaiDuoi.cot)
+        {
+            head.cot = gocTraiTren.cot;  // Nếu đi ra khỏi bên phải, đặt lại ở bên trái
+        }
+        else if (head.dong < gocTraiTren.dong)
+        {
+            head.dong = gocPhaiDuoi.dong - 1;  // Nếu đi ra khỏi phía trên, đặt lại ở phía dưới
+        }
+        else if (head.dong >= gocPhaiDuoi.dong)
+        {
+            head.dong = gocTraiTren.dong;  // Nếu đi ra khỏi phía dưới, đặt lại ở phía trên
+        }
     }
     /**
     *   vẽ con rắn
@@ -726,6 +751,16 @@ void hienThiDiemCao()
     diChuyenCotDong(gocPhaiDuoi.cot + 4, 1);
     cout << "Điểm cao: " << diemCao << "/" << luotChoi;
 }
+/**
+*   Ẩn con trỏ
+*/
+void Nocursortype()
+{
+    CONSOLE_CURSOR_INFO Info;
+    Info.bVisible = FALSE;
+    Info.dwSize = 20;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+}
 int main()
 {
     CONRAN r;
@@ -734,6 +769,8 @@ int main()
     oldcodepage = GetConsoleOutputCP();
     // xuất tiếng việt có dấu ra màn hình
     SetConsoleOutputCP(65001);
+    // Ẩn con trỏ
+    Nocursortype();
     manHinhChinh(&r);
     r.tocDo = doKho;
     veConMoi(r);
