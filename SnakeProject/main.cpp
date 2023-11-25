@@ -40,7 +40,7 @@ bool ktConMoiTrungConRan(CONRAN r);
 void veConMoi(CONRAN r);
 void xoaConMoi();
 void khiConRanPhamQuy(CONRAN);
-void manHinhChinh(CONRAN*);
+void veGiaoDien(CONRAN*);
 void veLaiDiemVienBiXoa(CONRAN);
 void hienTrangThai(char[]);
 void thaoTacPhimR(CONRAN*, int&);
@@ -648,9 +648,9 @@ void khiConRanPhamQuy(CONRAN *r, int &Huong)
     }
 }
 /**
-*   Màn hình chính
+*   vẽ giao diện
 */
-void manHinhChinh(CONRAN *r)
+void veGiaoDien(CONRAN *r)
 {
     system("cls");
     diem = 0;
@@ -723,7 +723,7 @@ void thaoTacPhimM(CONRAN *r, int &Huong)
 {
     Huong = 0;
     lamMoiRan(r);
-    manHinhChinh(r);
+    veGiaoDien(r);
     r->tocDo = doKho;
     veConMoi(*r);
     r->veThanRan();
@@ -765,7 +765,7 @@ int main()
     SetConsoleOutputCP(65001);
     // Ẩn con trỏ
     anConTro();
-    manHinhChinh(&r);
+    veGiaoDien(&r);
     r.tocDo = doKho;
     veConMoi(r);
     r.veThanRan();
