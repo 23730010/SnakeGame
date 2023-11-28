@@ -467,7 +467,7 @@ void hienThiThongTin1()
     hienTrangThai(trangThaiDangChoi);
     // In hướng dẫn
     diChuyenCotDong(gocTraiTren.cot, gocPhaiDuoi.dong+3);
-    cout<< "Phím Mũi tên hay <A-X-W-D> để Di chuyển";
+    cout<< "Phím Mũi tên hay <A-X-S-D> để Di chuyển";
     diChuyenCotDong(gocPhaiDuoi.cot -32, gocPhaiDuoi.dong +3);
     cout<< "<R> Chơi lại >><< Để gọi Menu <M>";
     diChuyenCotDong(gocTraiTren.cot, gocPhaiDuoi.dong +4);
@@ -816,10 +816,10 @@ int main()
         if (kbhit())
         {
             t = getch();
-            if ((t=='a' || t=='A') && Huong != 0) Huong = 2;
-            else if ((t=='w' || t=='W') && Huong != 1) Huong = 3;
-            else if ((t=='d' || t=='D') && Huong != 2) Huong = 0;
-            else if ((t=='x' || t=='X') && Huong != 3) Huong = 1;
+            if ((t=='a' || t=='A' || t==75) && Huong != 0) Huong = 2;
+            else if ((t=='w' || t=='W' || t==72) && Huong != 1) Huong = 3;
+            else if ((t=='d' || t=='D' || t==77) && Huong != 2) Huong = 0;
+            else if ((t=='s' || t=='S' || t==80) && Huong != 3) Huong = 1;
             else if (t == ' ') tamDung(&r, Huong);
             else if (t=='r' || t=='R')
             {
