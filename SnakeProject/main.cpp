@@ -456,8 +456,8 @@ void hienThiThongTin1()
     inGiuaCot1Cot2(2, gocTraiTren.cot, gocTraiTren.dong + 8, "TRẠNG THÁI");
     hienTrangThai(trangThaiDangChoi);
     // In hướng dẫn
-    diChuyenCotDong(gocTraiTren.cot, gocPhaiDuoi.dong+3);
-    cout<< "Phím Mũi tên hay <A-W-D-S> để Di chuyển";
+
+    cout<< "Phím Mũi tên hay <A-S-W-D> để Di chuyển";
     diChuyenCotDong(gocPhaiDuoi.cot -32, gocPhaiDuoi.dong +3);
     cout<< "<R> Chơi lại >><< Để gọi Menu <M>";
     diChuyenCotDong(gocTraiTren.cot, gocPhaiDuoi.dong +4);
